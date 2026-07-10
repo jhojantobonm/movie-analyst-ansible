@@ -1,0 +1,7 @@
+---
+- name: Manage frontend
+  hosts: frontend
+  become: true
+
+  roles:
+    - frontend
