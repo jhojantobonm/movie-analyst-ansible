@@ -13,7 +13,6 @@
     repo: https://github.com/jhojantobonm/movie-analyst-api.git
     dest: /home/ubuntu/movie-analyst-api
     version: main
-    update: true
 
 - name: Install npm dependencies
   community.general.npm:
