@@ -6,9 +6,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/home/ubuntu/movie-analyst-api
-
-Environment=PORT=3000
-
+Environment=PORT=80
 ExecStart=/usr/bin/npm start
 
 Restart=always
