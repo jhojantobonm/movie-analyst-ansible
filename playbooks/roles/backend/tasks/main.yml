@@ -1,0 +1,27 @@
+---
+- name: Install required packages
+  ansible.builtin.apt:
+    name:
+      - git
+      - nodejs
+      - npm
+    state: present
+    update_cache: true
+
+- name: Clone backend repository
+  ansible.builtin.git:
+    repo: https://github.com/jhojantobonm/movie-analyst-api.git
+    dest: /home/ubuntu/movie-analyst-api
+    version: main
+    update: true
+
+- name: Install npm dependencies
+  community.general.npm:
+    path: /home/ubuntu/movie-analyst-api
+
+- name: Deploy systemd service
+  ansible.builtin.template:
+    src: movie-backend.service.j2
+    dest: /etc/systemd/system/movie-backend.service
+    mode: "0644"
+  notify: Restart backend
