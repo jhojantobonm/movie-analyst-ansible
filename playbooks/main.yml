@@ -1,8 +1,14 @@
 ---
-- name: Manage frontend
-  hosts: frontend
+- hosts: frontend
   become: true
 
   roles:
-    - frontend
-    - backend
+    - role: frontend
+      tags: frontend
+
+- hosts: backend
+  become: true
+
+  roles:
+    - role: backend
+      tags: backend
