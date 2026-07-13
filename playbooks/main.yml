@@ -32,13 +32,13 @@
         db_password: "{{ db_secret.password }}"
         
     - name: Show database variables
-      debug:
+      ansible.builtin.debug:
         msg:
-          - "db_host={{ db_host | default('NOT SET') }}"
-          - "db_port={{ db_port | default('NOT SET') }}"
-          - "db_name={{ db_name | default('NOT SET') }}"
-          - "db_user={{ db_user | default('NOT SET') }}"
-          - "db_password={{ db_password | default('NOT SET') }}"
+        - "db_host={{ db_host | default('NOT SET') }}"
+        - "db_port={{ db_port | default('NOT SET') }}"
+        - "db_name={{ db_name | default('NOT SET') }}"
+        - "db_user={{ db_user | default('NOT SET') }}"
+        - "db_password={{ db_password | default('NOT SET') }}"
 
   roles:
     - role: backend
