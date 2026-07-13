@@ -9,9 +9,6 @@
 - hosts: backend
   become: true
 
-  vars:
-
-
   tasks:
     - name: Read database secret
       amazon.aws.secretsmanager_secret:
