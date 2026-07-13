@@ -9,6 +9,24 @@
 - hosts: backend
   become: true
 
+  vars:
+
+
+  tasks:
+    - name: Read database secret
+      amazon.aws.secretsmanager_secret:
+        name: "{{ db_secret_arn }}"
+      register: db_secret
+
+    - name: Set database variables
+      ansible.builtin.set_fact:
+        db_host: "{{ rds_endpoint }}"
+        db_port: "{{ db_port }}"
+        db_name: "{{ db_name }}"
+        db_user: "{{ db_secret.secret.username }}"
+        db_password: "{{ db_secret.secret.password }}"
+
   roles:
     - role: backend
-      tags: backend
+      tags:
+        - backend
