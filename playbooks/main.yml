@@ -18,7 +18,7 @@
         --query SecretString
         --output text
       register: secret_json
-      
+
     - name: Parse secret
       ansible.builtin.set_fact:
         db_secret: "{{ secret_json.stdout | from_json }}"
@@ -30,15 +30,15 @@
         db_name: "{{ db_name }}"
         db_user: "{{ db_secret.username }}"
         db_password: "{{ db_secret.password }}"
-        
+
     - name: Show database variables
       ansible.builtin.debug:
         msg:
-        - "db_host={{ db_host | default('NOT SET') }}"
-        - "db_port={{ db_port | default('NOT SET') }}"
-        - "db_name={{ db_name | default('NOT SET') }}"
-        - "db_user={{ db_user | default('NOT SET') }}"
-        - "db_password={{ db_password | default('NOT SET') }}"
+          - "db_host={{ db_host | default('NOT SET') }}"
+          - "db_port={{ db_port | default('NOT SET') }}"
+          - "db_name={{ db_name | default('NOT SET') }}"
+          - "db_user={{ db_user | default('NOT SET') }}"
+          - "db_password={{ db_password | default('NOT SET') }}"
 
   roles:
     - role: backend
