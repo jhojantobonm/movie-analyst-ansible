@@ -4,24 +4,32 @@
 
   roles:
     - role: frontend
-      tags: frontend
+      tags:
+        - frontend
 
 - hosts: backend
   become: true
 
   tasks:
     - name: Read database secret
-      amazon.aws.secretsmanager_secret:
-        name: "{{ db_secret_arn }}"
-      register: db_secret
+      command: >
+        aws secretsmanager get-secret-value
+        --secret-id {{ db_secret_arn }}
+        --query SecretString
+        --output text
+      register: secret_json
+      
+    - name: Parse secret
+      ansible.builtin.set_fact:
+        db_secret: "{{ secret_json.stdout | from_json }}"
 
     - name: Set database variables
       ansible.builtin.set_fact:
         db_host: "{{ rds_endpoint }}"
         db_port: "{{ db_port }}"
         db_name: "{{ db_name }}"
-        db_user: "{{ db_secret.secret.username }}"
-        db_password: "{{ db_secret.secret.password }}"
+        db_user: "{{ db_secret.username }}"
+        db_password: "{{ db_secret.password }}"
 
   roles:
     - role: backend
