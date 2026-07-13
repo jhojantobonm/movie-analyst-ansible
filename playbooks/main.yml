@@ -12,11 +12,17 @@
 
   tasks:
     - name: Read database secret
-      command: >
-        aws secretsmanager get-secret-value
-        --secret-id {{ db_secret_arn }}
-        --query SecretString
-        --output text
+      command:
+        argv:
+          - aws
+          - secretsmanager
+          - get-secret-value
+          - --secret-id
+          - "{{ db_secret_arn }}"
+          - --query
+          - SecretString
+          - --output
+          - text
       register: secret_json
 
     - name: Parse secret
@@ -34,11 +40,11 @@
     - name: Show database variables
       ansible.builtin.debug:
         msg:
-          - "db_host={{ db_host | default('NOT SET') }}"
-          - "db_port={{ db_port | default('NOT SET') }}"
-          - "db_name={{ db_name | default('NOT SET') }}"
-          - "db_user={{ db_user | default('NOT SET') }}"
-          - "db_password={{ db_password | default('NOT SET') }}"
+        - "db_host={{ db_host | default('NOT SET') }}"
+        - "db_port={{ db_port | default('NOT SET') }}"
+        - "db_name={{ db_name | default('NOT SET') }}"
+        - "db_user={{ db_user | default('NOT SET') }}"
+        - "db_password={{ db_password | default('NOT SET') }}"
 
   roles:
     - role: backend
