@@ -1,11 +1,11 @@
 ---
-# - hosts: frontend
-#   become: true
+- hosts: frontend
+  become: true
 
-#   roles:
-#     - role: frontend
-#       tags:
-#         - frontend
+  roles:
+    - role: frontend
+      tags:
+        - frontend
 
 - hosts: backend
   become: true
