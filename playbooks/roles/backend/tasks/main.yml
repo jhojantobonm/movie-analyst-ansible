@@ -1,64 +1,66 @@
 ---
-- name: Install required packages
-  ansible.builtin.apt:
-    name:
-      - git
-      - nodejs
-      - npm
-      - unzip
-      - curl
-    state: present
-    update_cache: true
+# - name: Install required packages
+#   ansible.builtin.apt:
+#     name:
+#       - git
+#       - nodejs
+#       - npm
+#       - unzip
+#       - curl
+#     state: present
+#     update_cache: true
 
-- name: Download AWS CLI v2
-  ansible.builtin.get_url:
-    url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
-    dest: /tmp/awscliv2.zip
-    mode: "0644"
+# - name: Download AWS CLI v2
+#   ansible.builtin.get_url:
+#     url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+#     dest: /tmp/awscliv2.zip
+#     mode: "0644"
 
-- name: Extract AWS CLI
-  ansible.builtin.unarchive:
-    src: /tmp/awscliv2.zip
-    dest: /tmp
-    remote_src: true
+# - name: Extract AWS CLI
+#   ansible.builtin.unarchive:
+#     src: /tmp/awscliv2.zip
+#     dest: /tmp
+#     remote_src: true
 
-- name: Install AWS CLI
-  ansible.builtin.command:
-    cmd: /tmp/aws/install --update
+# - name: Install AWS CLI
+#   ansible.builtin.command:
+#     cmd: /tmp/aws/install --update
 
-- name: Read database secret
-  command:
-    argv:
-      - aws
-      - secretsmanager
-      - get-secret-value
-      - --region
-      - us-east-1
-      - --secret-id
-      - "{{ db_secret_arn }}"
-      - --query
-      - SecretString
-      - --output
-      - text
-  register: secret_json
+# - name: Read database secret
+#   command:
+#     argv:
+#       - aws
+#       - secretsmanager
+#       - get-secret-value
+#       - --region
+#       - us-east-1
+#       - --secret-id
+#       - "{{ db_secret_arn }}"
+#       - --query
+#       - SecretString
+#       - --output
+#       - text
+#   register: secret_json
   
-- name: Debug ead database secret
-  ansible.builtin.debug:
-    msg:
-    - "secret_json: {{ secret_json.stdout }}"
+# - name: Debug ead database secret
+#   ansible.builtin.debug:
+#     msg:
+#     - "secret_json: {{ secret_json.stdout }}"
 
-- name: Parse secret
-  ansible.builtin.set_fact:
-    db_secret: "{{ secret_json.stdout | from_json }}"
+# - name: Parse secret
+#   ansible.builtin.set_fact:
+#     db_secret: "{{ secret_json.stdout | from_json }}"
   
 
 - name: Set database variables
   ansible.builtin.set_fact:
-    db_host: "{{ rds_endpoint }}"
+    db_host: "{{ db_endpoint }}"
     db_port: "{{ db_port }}"
     db_name: "{{ db_name }}"
-    db_user: "{{ db_secret.username }}"
-    db_password: "{{ db_secret.password }}"
+    # db_user: "{{ db_secret.username }}"
+    # db_password: "{{ db_secret.password }}"
+    db_user: "{{ db_user }}"
+    db_password: "{{ db_password }}"
 
 - name: Debug Set database variables
   ansible.builtin.debug:
@@ -66,24 +68,26 @@
     - "db_host: {{ db_host }}"
     - "db_port: {{ db_port }}"
     - "db_name: {{ db_name }}"
-    - "db_user: {{ db_secret.username }}"
-    - "db_password: {{ db_secret.password }}"
+    # - "db_user: {{ db_secret.username }}"
+    # - "db_password: {{ db_secret.password }}"
+    - "db_user: {{ db_user }}"
+    - "db_password: {{ db_password }}"
 
-- name: Clone backend repository
-  ansible.builtin.git:
-    repo: https://github.com/jhojantobonm/movie-analyst-api.git
-    dest: /home/ubuntu/movie-analyst-api
-    version: main
+# - name: Clone backend repository
+#   ansible.builtin.git:
+#     repo: https://github.com/jhojantobonm/movie-analyst-api.git
+#     dest: /home/ubuntu/movie-analyst-api
+#     version: main
 
-- name: Install npm dependencies
-  community.general.npm:
-    path: /home/ubuntu/movie-analyst-api
+# - name: Install npm dependencies
+#   community.general.npm:
+#     path: /home/ubuntu/movie-analyst-api
 
-- name: Deploy systemd service
-  ansible.builtin.template:
-    src: movie-backend.service.j2
-    dest: /etc/systemd/system/movie-backend.service
-    owner: root
-    group: root
-    mode: "0644"
-  notify: Restart backend
+# - name: Deploy systemd service
+#   ansible.builtin.template:
+#     src: movie-backend.service.j2
+#     dest: /etc/systemd/system/movie-backend.service
+#     owner: root
+#     group: root
+#     mode: "0644"
+#   notify: Restart backend
