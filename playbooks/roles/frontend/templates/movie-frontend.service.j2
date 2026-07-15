@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/home/ubuntu/movie-analyst-ui
-Environment=BACKEND_URL={{ groups['backend'][0] }}:3000
+Environment=BACKEND_URL={{ alb_backend_dns }}
 Environment=PORT=80
 ExecStart=/usr/bin/npm start
 Restart=always
