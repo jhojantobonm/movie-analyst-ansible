@@ -22,3 +22,11 @@
     - role: db
       tags:
         - db
+
+- hosts: backend
+  become: false
+
+  roles:
+    - role: backend_seed
+      tags:
+        - backend_seed

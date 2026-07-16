@@ -1,0 +1,51 @@
+---
+# - name: Debug Set database variables
+#   ansible.builtin.debug:
+#     msg:
+#     - "db_host: {{ db_host }}"
+#     - "db_port: {{ db_port }}"
+#     - "db_name: {{ db_name }}"
+#     - "db_user: {{ db_user }}"
+#     - "db_password: {{ db_password }}"
+#     - "backend_service_name: {{ backend_service_name }}"
+#     - "backend_app_dir: {{ backend_app_dir }}"
+
+- name: Stop backend service
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ backend_service_name }}"
+    state: stopped
+
+- name: Run database seed
+  become: false
+  ansible.builtin.shell: |
+    DB_HOST={{ db_host }} \
+    DB_PORT={{ db_port }} \
+    DB_NAME={{ db_name }} \
+    DB_USER={{ db_user }} \
+    DB_PASS={{ db_password }} \
+    node seeds.js
+  args:
+    chdir: "{{ backend_app_dir }}"
+
+- name: Reload systemd
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart backend service
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ backend_service_name }}"
+    state: restarted
+
+- name: Get backend service status
+  become: true
+  ansible.builtin.command:
+    cmd: systemctl status {{ backend_service_name }} --no-pager
+  register: backend_status
+  changed_when: false
+
+- name: Show backend status
+  ansible.builtin.debug:
+    var: backend_status.stdout_lines
