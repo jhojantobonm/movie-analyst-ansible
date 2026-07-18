@@ -6,11 +6,9 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/home/ubuntu/movie-analyst-api
-Environment=DB_HOST={{ db_host }}
-Environment=DB_PORT={{ db_port }}
-Environment=DB_NAME={{ db_name }}
-Environment=DB_USER={{ db_user }}
-Environment=DB_PASS={{ db_password }}
+
+Environment=DB_SECRET_NAME={{db_secret_name}}
+Environment=AWS_REGION={{aws_region}}
 Environment=PORT=3000
 ExecStart=/usr/bin/npm start
 
