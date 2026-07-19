@@ -79,5 +79,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,macos,windows,ansible
-inventory/hosts.ini
+inventory/*.ini
+inventory/*.yml
 inventory/group_vars/*.yml
