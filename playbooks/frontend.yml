@@ -1,0 +1,8 @@
+---
+- hosts: frontend
+  become: true
+
+  roles:
+    - role: frontend
+      tags:
+        - frontend
