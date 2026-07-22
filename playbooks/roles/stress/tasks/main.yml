@@ -1,0 +1,21 @@
+---
+# - name: Install stress-ng
+#   ansible.builtin.apt:
+#     name: stress-ng
+#     state: present
+#     update_cache: true
+
+- name: Get CPU count
+  ansible.builtin.command: nproc
+  register: cpu_count
+  changed_when: false
+
+- name: Determine workers
+  ansible.builtin.set_fact:
+    workers: "{{ cpu_count.stdout if stress_cpu_workers | int == 0 else stress_cpu_workers }}"
+
+- name: Start CPU stress
+  ansible.builtin.shell: |
+    nohup stress-ng --cpu {{ workers }} --timeout {{ stress_duration }} >/tmp/stress.log 2>&1 &
+  args:
+    executable: /bin/bash

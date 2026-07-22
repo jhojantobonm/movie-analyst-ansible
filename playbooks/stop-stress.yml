@@ -1,0 +1,10 @@
+---
+- name: Stop stress-ng on frontend instances
+  hosts: frontend
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Stop stress-ng
+      ansible.builtin.command: pkill stress-ng
+      ignore_errors: true

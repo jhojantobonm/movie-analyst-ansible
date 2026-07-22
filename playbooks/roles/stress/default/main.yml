@@ -1,0 +1,3 @@
+---
+stress_duration: "1m"
+stress_cpu_workers: 0

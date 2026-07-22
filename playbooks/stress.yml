@@ -1,0 +1,8 @@
+---
+- hosts: frontend
+  become: true
+
+  roles:
+    - role: stress
+      vars:
+        stress_duration: "1m"
