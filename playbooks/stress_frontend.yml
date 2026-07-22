@@ -5,4 +5,4 @@
   roles:
     - role: stress
       vars:
-        stress_duration: "1m"
+        stress_duration: "20m"
