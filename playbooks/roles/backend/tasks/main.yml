@@ -5,6 +5,7 @@
       - git
       - unzip
       - curl
+      - stress-ng
     state: present
     update_cache: true
 

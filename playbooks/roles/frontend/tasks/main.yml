@@ -5,6 +5,7 @@
       - git
       - nodejs
       - npm
+      - stress-ng
     state: present
     update_cache: true
 
